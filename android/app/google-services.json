@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "200817554967",
+    "firebase_url": "https://esp32-uvsensor-default-rtdb.firebaseio.com",
+    "project_id": "esp32-uvsensor",
+    "storage_bucket": "esp32-uvsensor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:200817554967:android:7051fe97c52c846efb8e52",
+        "android_client_info": {
+          "package_name": "com.example.uv_sensor_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgwEdirwZEYCd9ZmTUuVny5_fBYP7FZcI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

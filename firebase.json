@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"android":{"default":{"projectId":"esp32-uvsensor","appId":"1:200817554967:android:7051fe97c52c846efb8e52","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"esp32-uvsensor","configurations":{"android":"1:200817554967:android:7051fe97c52c846efb8e52"}}}}}}
