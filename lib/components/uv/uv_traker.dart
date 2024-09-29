@@ -1,5 +1,5 @@
 
-import 'package:firebase_database/firebase_database.dart';
+//import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class UvTraker extends StatefulWidget {
@@ -25,7 +25,7 @@ class _UvTrakerState extends State<UvTraker> {
   @override
   Widget build(BuildContext context){
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
+      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
       margin: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
       alignment: Alignment.center,
       /*decoration: BoxDecoration(
@@ -35,16 +35,16 @@ class _UvTrakerState extends State<UvTraker> {
       ),*/
       child: Column(
         children: [
-          UVIndex(),
-          Text("Índice IUV", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+          _UVIndex(),
+          Text("Índice IUV", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.green),),
         ],
       )
     );
   }
 }
 
-class UVIndex extends StatelessWidget {
-  const UVIndex({
+class _UVIndex extends StatelessWidget {
+  const _UVIndex({
     super.key,
   });
 

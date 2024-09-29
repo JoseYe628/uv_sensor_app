@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:uv_sensor_app/components/uv/uv_traker.dart';
+import 'package:uv_sensor_app/components/uv/uv_components.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -17,7 +17,8 @@ class HomeScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          UvTraker()
+          UvTraker(),
+          UVMessageBox(),
         ],
       ),
     );
