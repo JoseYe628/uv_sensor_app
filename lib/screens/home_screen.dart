@@ -8,10 +8,11 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context){
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Índice de radiación UV", style: TextStyle(color: Colors.white),),
+        title: Text("UV App", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
         centerTitle: true,
-        backgroundColor: Colors.purple,
+        backgroundColor: Colors.white,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
