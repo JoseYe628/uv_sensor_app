@@ -19,6 +19,7 @@ class HomeScreen extends StatelessWidget {
         children: [
           UvTraker(),
           UVMessageBox(),
+          UVHistory(),
         ],
       ),
     );

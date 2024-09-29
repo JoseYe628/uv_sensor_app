@@ -8,11 +8,11 @@ class UVMessageBox extends StatelessWidget {
   Widget build(BuildContext context){
     return Container(
       alignment: Alignment.centerLeft,
-      margin: EdgeInsets.symmetric(horizontal: 40),
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+      margin: const EdgeInsets.symmetric(horizontal: 40),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.green, width: 2),
-        borderRadius: BorderRadius.all(Radius.circular(10))
+        borderRadius: const BorderRadius.all(Radius.circular(10))
       ),
       child: Row(
         children: [
