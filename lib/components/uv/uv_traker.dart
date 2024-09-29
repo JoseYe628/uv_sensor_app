@@ -25,19 +25,18 @@ class _UvTrakerState extends State<UvTraker> {
   @override
   Widget build(BuildContext context){
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 25, horizontal: 10),
+      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
       margin: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
       alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: Colors.white60,
-        border: Border.all(color: Colors.red),
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
+      /*decoration: BoxDecoration(
+        color: Colors.green.withAlpha(50),
+        border: Border.all(color: Colors.green, width: 2),
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),*/
       child: Column(
         children: [
-          Text("Índice IUV actual", style: TextStyle(fontSize: 16),),
-          SizedBox(height: 15),
           UVIndex(),
+          Text("Índice IUV", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
         ],
       )
     );
@@ -52,9 +51,13 @@ class UVIndex extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      "10",
+      "7",
       style: TextStyle(
-        fontSize: 60
+        height: 1,
+        //backgroundColor: Colors.red,
+        color: Colors.green,
+        fontSize: 120,
+        fontWeight: FontWeight.bold,
       ),
     );
   }
