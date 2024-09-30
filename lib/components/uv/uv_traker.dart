@@ -1,26 +1,12 @@
 
 //import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:uv_sensor_app/models/models.dart';
 
-class UvTraker extends StatefulWidget {
-  const UvTraker({super.key});
+class UvTraker extends StatelessWidget {
+  const UvTraker({super.key, required this.uvValue});
 
-  @override
-  State<UvTraker> createState() => _UvTrakerState();
-}
-
-class _UvTrakerState extends State<UvTraker> {
-
-  //DatabaseReference recordsDatabase = FirebaseDatabase.instance.ref('records');
-
-  @override
-  void initState() {
-    super.initState();
-    /*recordsDatabase.limitToLast(10).onValue.listen((DatabaseEvent event) {
-      final data = event.snapshot.value;
-      print(data);
-    });*/
-  }
+  final UVResponse uvValue;
 
   @override
   Widget build(BuildContext context){
@@ -28,14 +14,9 @@ class _UvTrakerState extends State<UvTraker> {
       padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
       margin: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
       alignment: Alignment.center,
-      /*decoration: BoxDecoration(
-        color: Colors.green.withAlpha(50),
-        border: Border.all(color: Colors.green, width: 2),
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-      ),*/
       child: Column(
         children: [
-          _UVIndex(),
+          _UVIndex(value: uvValue.iuv),
           Text("Índice IUV", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.green),),
         ],
       )
@@ -46,12 +27,15 @@ class _UvTrakerState extends State<UvTraker> {
 class _UVIndex extends StatelessWidget {
   const _UVIndex({
     super.key,
+    required this.value,
   });
+
+  final int value;
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      "10",
+      "${value}",
       style: TextStyle(
         height: 1,
         //backgroundColor: Colors.red,
