@@ -1,8 +1,11 @@
 
 import 'package:flutter/material.dart';
+import 'package:uv_sensor_app/models/models.dart';
 
 class UVHistory extends StatelessWidget {
-  const UVHistory({super.key});
+  UVHistory({super.key, required this.records});
+
+  List<UVResponse> records;
 
   @override
   Widget build(BuildContext context){
@@ -14,7 +17,7 @@ class UVHistory extends StatelessWidget {
         children: [
           Text("Historial de hoy", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 18)),
           Divider(color: Colors.green, height: 2, thickness: 2,),
-          _Records()
+          _Records(records)
         ],
       ),
     );
@@ -22,30 +25,28 @@ class UVHistory extends StatelessWidget {
 }
 
 class _Records extends StatelessWidget {
-  const _Records({super.key});
+  _Records(this.records);
+
+  List<UVResponse> records;
 
   @override
   Widget build(BuildContext context){
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: [
-          _HistoryRecord(),
-          _HistoryRecord(),
-          _HistoryRecord(),
-          _HistoryRecord(),
-          _HistoryRecord(),
-          _HistoryRecord(),
-          _HistoryRecord(),
-          _HistoryRecord(),
-        ],
+        children: records.reversed.map((uvRecord){
+          return _HistoryRecord(time: uvRecord.time, uvVal: uvRecord.iuv);
+        }).toList(),
       ),
     );
   }
 }
 
 class _HistoryRecord extends StatelessWidget {
-  const _HistoryRecord({super.key});
+  const _HistoryRecord({super.key, required this.time, required this.uvVal});
+
+  final String time;
+  final int uvVal;
 
   @override
   Widget build(BuildContext context){
@@ -59,8 +60,8 @@ class _HistoryRecord extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text("12", style: TextStyle(color: Colors.green, fontSize: 25, fontWeight: FontWeight.w500)),
-          Text("12:00", style: TextStyle(color: Colors.green, fontSize: 13, fontWeight: FontWeight.w500)),
+          Text("${uvVal}", style: TextStyle(color: Colors.green, fontSize: 25, fontWeight: FontWeight.w500)),
+          Text(time, style: TextStyle(color: Colors.green, fontSize: 13, fontWeight: FontWeight.w500)),
         ],
       ),
     );

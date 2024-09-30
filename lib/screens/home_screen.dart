@@ -55,17 +55,15 @@ class _UVElementsState extends State<_UVElements> {
 
   @override
   Widget build(BuildContext context){
-    return uvRecords.isEmpty 
-      ? Center(
-        child: CircularProgressIndicator(color: Colors.green, strokeWidth: 2,),
-      ) 
-      : SingleChildScrollView(
+    return uvRecords.isEmpty
+    ? Container() 
+    : SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               UvTraker(uvValue: uvRecords.last,),
               UVMessageBox(),
-              UVHistory(),
+              UVHistory(records: uvRecords),
               GridMenuInfo(),
             ],
           ),
