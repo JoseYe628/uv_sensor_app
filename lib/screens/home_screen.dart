@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:uv_sensor_app/components/info/grid_menu_info.dart';
 import 'package:uv_sensor_app/components/uv/uv_components.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -13,14 +14,18 @@ class HomeScreen extends StatelessWidget {
         title: Text("UV App", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
         centerTitle: true,
         backgroundColor: Colors.white,
+        scrolledUnderElevation: 0,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          UvTraker(),
-          UVMessageBox(),
-          UVHistory(),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            UvTraker(),
+            UVMessageBox(),
+            UVHistory(),
+            GridMenuInfo(),
+          ],
+        ),
       ),
     );
   }

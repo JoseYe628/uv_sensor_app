@@ -51,7 +51,7 @@ class _UVIndex extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      "7",
+      "10",
       style: TextStyle(
         height: 1,
         //backgroundColor: Colors.red,

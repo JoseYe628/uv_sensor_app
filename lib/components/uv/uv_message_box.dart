@@ -20,7 +20,7 @@ class UVMessageBox extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Alto", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 16),),
+                Text("Alto", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 20),),
                 Text("La radiación ultravioleta es muy alta en este momento, tome las precauciones necesarias"),
               ],
             ),
