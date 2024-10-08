@@ -1,9 +1,10 @@
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uv_sensor_app/bloc/uv_records_cubit.dart';
 import 'package:uv_sensor_app/components/info/grid_menu_info.dart';
 import 'package:uv_sensor_app/components/uv/uv_components.dart';
-import 'package:uv_sensor_app/models/models.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -34,52 +35,23 @@ class _UVElements extends StatefulWidget {
 class _UVElementsState extends State<_UVElements> {
 
   DatabaseReference recordsDatabase = FirebaseDatabase.instance.ref('records');
-  List<UVResponse> uvRecords = [];
-  bool dataIsVoid = false;
-
-  @override
-  void initState() {
-    super.initState();
-    DateTime nowDateTime = DateTime.now();
-    int todayAtMidnight = DateTime(nowDateTime.year, nowDateTime.month, nowDateTime.day).millisecondsSinceEpoch;
-    recordsDatabase.limitToLast(10).orderByChild("timestamp").startAt(todayAtMidnight).onValue.listen((DatabaseEvent event) {
-      if(event.snapshot.value == null){
-        setState(() {
-          dataIsVoid == true;
-        });
-      }
-      var val = event.snapshot.value as Map<dynamic, dynamic>;
-      List<UVResponse> records = [];
-      val.forEach((key, value) {
-        var val = value as Map<dynamic, dynamic>;
-        int timestamp = val['timestamp'];
-        DateTime utcdatetime = DateTime.fromMillisecondsSinceEpoch(timestamp, isUtc: true);
-        DateTime perudatetime = utcdatetime.toUtc().subtract(const Duration(hours: 5));
-        var valorUV = val['valor'];
-        UVResponse uvResponseData = UVResponse(perudatetime ,val['valor']);
-        records.add(uvResponseData);
-      });
-      records.sort((a,b) => a.time.compareTo(b.time));
-      setState(() {
-        uvRecords = records;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context){
-    return uvRecords.isEmpty
-    ? Container() 
-    : SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-            children: dataIsVoid ? [Text("No hay información el día de hoy")] : [
-              UvTraker(uvValue: uvRecords.last,),
-              UVMessageBox(),
-              UVHistory(records: uvRecords),
-              GridMenuInfo(),
-            ],
+    return BlocBuilder<UVRecordsCubit, UVRecordsState>(
+      builder: (BuildContext context, UVRecordsState recordState) => recordState.records.isEmpty
+      ? Container() 
+      : SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+              children: recordState.recordsIsVoid ? [Text("No hay información el día de hoy")] : [
+                UvTraker(uvValue: recordState.records.last),
+                UVMessageBox(),
+                UVHistory(records: recordState.records),
+                GridMenuInfo(),
+              ],
+            ),
           ),
-        );
+    );
   }
 }
