@@ -35,7 +35,7 @@ class _Records extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: records.reversed.map((uvRecord){
-          return _HistoryRecord(time: uvRecord.time, uvVal: uvRecord.iuv);
+          return _HistoryRecord(time: uvRecord.time.toString(), uvVal: uvRecord.iuv);
         }).toList(),
       ),
     );

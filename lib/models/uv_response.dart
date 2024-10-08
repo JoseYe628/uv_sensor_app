@@ -1,6 +1,6 @@
 
 class UVResponse {
-  final String time;
+  final DateTime time;
   final int iuv;
 
   UVResponse(this.time, this.iuv);

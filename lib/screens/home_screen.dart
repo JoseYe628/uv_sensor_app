@@ -33,18 +33,31 @@ class _UVElements extends StatefulWidget {
 
 class _UVElementsState extends State<_UVElements> {
 
-  DatabaseReference recordsDatabase = FirebaseDatabase.instance.ref('records/2024-10-01');
+  DatabaseReference recordsDatabase = FirebaseDatabase.instance.ref('records');
   List<UVResponse> uvRecords = [];
+  bool dataIsVoid = false;
 
   @override
   void initState() {
     super.initState();
-    recordsDatabase.limitToLast(10).onValue.listen((DatabaseEvent event) {
+    DateTime nowDateTime = DateTime.now();
+    int todayAtMidnight = DateTime(nowDateTime.year, nowDateTime.month, nowDateTime.day).millisecondsSinceEpoch;
+    recordsDatabase.limitToLast(10).orderByChild("timestamp").startAt(todayAtMidnight).onValue.listen((DatabaseEvent event) {
+      if(event.snapshot.value == null){
+        setState(() {
+          dataIsVoid == true;
+        });
+      }
       var val = event.snapshot.value as Map<dynamic, dynamic>;
-      var data = Map<String, int>.from(val);
       List<UVResponse> records = [];
-      data.forEach((timeKey, iuvVal){
-        records.add(UVResponse(timeKey, iuvVal));
+      val.forEach((key, value) {
+        var val = value as Map<dynamic, dynamic>;
+        int timestamp = val['timestamp'];
+        DateTime utcdatetime = DateTime.fromMillisecondsSinceEpoch(timestamp, isUtc: true);
+        DateTime perudatetime = utcdatetime.toUtc().subtract(const Duration(hours: 5));
+        var valorUV = val['valor'];
+        UVResponse uvResponseData = UVResponse(perudatetime ,val['valor']);
+        records.add(uvResponseData);
       });
       records.sort((a,b) => a.time.compareTo(b.time));
       setState(() {
@@ -60,7 +73,7 @@ class _UVElementsState extends State<_UVElements> {
     : SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
+            children: dataIsVoid ? [Text("No hay información el día de hoy")] : [
               UvTraker(uvValue: uvRecords.last,),
               UVMessageBox(),
               UVHistory(records: uvRecords),
