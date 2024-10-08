@@ -38,20 +38,16 @@ class _UVElementsState extends State<_UVElements> {
 
   @override
   Widget build(BuildContext context){
-    return BlocBuilder<UVRecordsCubit, UVRecordsState>(
-      builder: (BuildContext context, UVRecordsState recordState) => recordState.records.isEmpty
-      ? Container() 
-      : SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-              children: recordState.recordsIsVoid ? [Text("No hay información el día de hoy")] : [
-                UvTraker(uvValue: recordState.records.last),
-                UVMessageBox(),
-                UVHistory(records: recordState.records),
-                GridMenuInfo(),
-              ],
-            ),
-          ),
-    );
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            UvTraker(),
+            UVMessageBox(),
+            UVHistory(),
+            GridMenuInfo(),
+          ],
+        ),
+      );
   }
 }

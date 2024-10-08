@@ -5,12 +5,12 @@ import 'package:uv_sensor_app/models/uv_response.dart';
 
 class UVRecordsState {
   final List<UVResponse> records;
-  final bool recordsIsVoid;
-  UVRecordsState(this.records, {this.recordsIsVoid = false});
+  final bool recordsNotFound;
+  UVRecordsState(this.records, {this.recordsNotFound = false});
 }
 
 class UVRecordsCubit extends Cubit<UVRecordsState>{
-  UVRecordsCubit(): super(UVRecordsState([], recordsIsVoid: true));
+  UVRecordsCubit(): super(UVRecordsState([]));
 
   DatabaseReference recordsDatabase = FirebaseDatabase.instance.ref('records');
 
@@ -19,7 +19,7 @@ class UVRecordsCubit extends Cubit<UVRecordsState>{
     int todayAtMidnight = DateTime(nowDateTime.year, nowDateTime.month, nowDateTime.day).millisecondsSinceEpoch;
     recordsDatabase.limitToLast(10).orderByChild("timestamp").startAt(todayAtMidnight).onValue.listen((DatabaseEvent event) {
       if(event.snapshot.value == null){
-        emit(UVRecordsState([], recordsIsVoid: true));
+        emit(UVRecordsState([], recordsNotFound: true));
       }
       var val = event.snapshot.value as Map<dynamic, dynamic>;
       List<UVResponse> records = [];

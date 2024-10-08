@@ -1,11 +1,11 @@
 
 import 'package:flutter/material.dart';
-import 'package:uv_sensor_app/models/models.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uv_sensor_app/bloc/uv_records_cubit.dart';
 
 class UVHistory extends StatelessWidget {
-  UVHistory({super.key, required this.records});
+  UVHistory({super.key});
 
-  List<UVResponse> records;
 
   @override
   Widget build(BuildContext context){
@@ -17,7 +17,7 @@ class UVHistory extends StatelessWidget {
         children: [
           Text("Historial de hoy", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 18)),
           Divider(color: Colors.green, height: 2, thickness: 2,),
-          _Records(records)
+          _Records()
         ],
       ),
     );
@@ -25,18 +25,25 @@ class UVHistory extends StatelessWidget {
 }
 
 class _Records extends StatelessWidget {
-  _Records(this.records);
-
-  List<UVResponse> records;
 
   @override
   Widget build(BuildContext context){
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Row(
-        children: records.reversed.map((uvRecord){
-          return _HistoryRecord(time: "${uvRecord.time.hour}:${uvRecord.time.minute}", uvVal: uvRecord.iuv);
-        }).toList(),
+      child: BlocBuilder<UVRecordsCubit, UVRecordsState>(
+        builder: (BuildContext context, UVRecordsState state) { 
+          if(state.records.isEmpty){
+            return state.recordsNotFound
+              ? Text("No hay datos para mostrar hoy")
+              : Text("Cargando información...");
+          } else {
+            return Row(
+              children: state.records.reversed.map((uvRecord){
+                return _HistoryRecord(time: "${uvRecord.time.hour}:${uvRecord.time.minute}", uvVal: uvRecord.iuv);
+              }).toList(),
+            );
+          }
+        }
       ),
     );
   }
