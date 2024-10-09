@@ -1,8 +1,6 @@
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uv_sensor_app/bloc/uv_records_cubit.dart';
 import 'package:uv_sensor_app/components/info/grid_menu_info.dart';
 import 'package:uv_sensor_app/components/uv/uv_components.dart';
 
