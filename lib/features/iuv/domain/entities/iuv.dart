@@ -1,6 +1,6 @@
 
 class IUV {
-  final String value;
+  final int value;
   final DateTime time;
 
   IUV({required this.value, required this.time});
