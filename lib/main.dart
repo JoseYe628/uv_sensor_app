@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uv_sensor_app/bloc/uv_records_cubit.dart';
 import 'package:uv_sensor_app/routes/app_routes.dart';
+import 'package:uv_sensor_app/utils/firebase_api.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -10,6 +11,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseApi().initNotifications();
   runApp(const MainApp());
 }
 
