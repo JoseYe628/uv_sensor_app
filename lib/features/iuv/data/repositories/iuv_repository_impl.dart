@@ -16,6 +16,8 @@ class IUVRepositoryImpl implements IUVRepository {
 
   IUVRepositoryImpl({required this.iuvBluetoothDatasource});
 
+  @override
+  Stream<IUV> get dataStream => _dataIUVStreamController.stream;
 
   @override
   Future<Either<Failure, void>> initialRepository() async {
@@ -44,4 +46,5 @@ class IUVRepositoryImpl implements IUVRepository {
       return Left(BluetoothNotFoundDCharacteristicsFailure());
     }
   }
+
 }
