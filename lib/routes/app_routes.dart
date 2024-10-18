@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:uv_sensor_app/features/iuv/presentation/screens/home_screen.dart';
 
-import 'package:uv_sensor_app/screens/screens.dart';
 
 
 class AppRoutes {
