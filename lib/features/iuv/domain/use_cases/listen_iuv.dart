@@ -16,6 +16,15 @@ class ListenIUVUseCase {
   Stream<IUV> get dataStream => _dataIUVStreamController.stream;
 
   Future<Either<Failure, void>> call() async {
+    var initialResp = await repository.initialRepository();
+    initialResp.fold(
+      (f){
+        return Left(f);
+      },
+      (v){
+        // ---
+      }
+    );
     var resp = await repository.listenIUV();
     return resp.fold(
       (f){

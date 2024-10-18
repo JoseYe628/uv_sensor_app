@@ -1,31 +1,39 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uv_sensor_app/core/error/failure.dart';
+import 'package:uv_sensor_app/features/iuv/domain/use_cases/bluetooth_off_case.dart';
 import 'package:uv_sensor_app/features/iuv/domain/use_cases/listen_iuv.dart';
 
-abstract class IUVBluetoothState {}
-
-class IuvBluetoothInitialState extends IUVBluetoothState{}
+class IUVBluetoothState {
+  final bool bluetoothState;
+  IUVBluetoothState({required this.bluetoothState});
+}
 
 class IUVBluetoothReadState extends IUVBluetoothState {
   final int value;
   final DateTime time;
-  IUVBluetoothReadState({required this.value, required this.time});
+  IUVBluetoothReadState({required this.value, required this.time}): super(bluetoothState: true);
+}
+
+class IUVBluetoothOffState extends IUVBluetoothState {
+  IUVBluetoothOffState(): super(bluetoothState: false);
 }
 
 class IUVBluetoothFailureState extends IUVBluetoothState{
   final Failure failure;
-  IUVBluetoothFailureState({required this.failure});
+  IUVBluetoothFailureState({required this.failure}): super(bluetoothState: false);
 }
+
 
 
 class IUVBluetoothCubit extends Cubit<IUVBluetoothState> {
 
   final ListenIUVUseCase _listenIUVUseCase;
+  final BluetoothOffCase _bluetoothOffCase;
 
-  IUVBluetoothCubit(this._listenIUVUseCase): super(IuvBluetoothInitialState());
+  IUVBluetoothCubit(this._listenIUVUseCase, this._bluetoothOffCase): super(IUVBluetoothOffState());
 
-  void initCubit() async {
+  Future<void> initListen() async {
     var resp = await _listenIUVUseCase();
     resp.fold(
       (f) {
@@ -38,4 +46,17 @@ class IUVBluetoothCubit extends Cubit<IUVBluetoothState> {
       }
     );
   }
+
+  Future<void> bluetoothOff() async {
+    var resp = await _bluetoothOffCase();
+    resp.fold(
+      (f){
+        emit(IUVBluetoothFailureState(failure: f));
+      },
+      (v){
+        emit(IUVBluetoothOffState());
+      }
+    );
+  }
+
 }

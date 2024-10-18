@@ -40,10 +40,11 @@ class FlutterBlueDatasource implements IUVBluetoothDatasource {
 
     await FlutterBluePlus.startScan(
       withNames:["Esp32UVDevice"],
-      timeout: const Duration(seconds:15)
+      timeout: const Duration(seconds:10)
     );
 
     if(_device == null){
+      print("No se pudo encontrar el dispositivo");
       throw BluetoothNotFoundDeviceFailure();
     }
   }
@@ -57,7 +58,11 @@ class FlutterBlueDatasource implements IUVBluetoothDatasource {
 
   @override
   Future<void> disconnectWithDevice() async {
-    await _device?.disconnect();
+    try {
+      await _device?.disconnect();
+    } catch(err){
+      throw BluetoothDisconnectError();
+    }
   }
 
   @override

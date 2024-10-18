@@ -8,3 +8,4 @@ class BluetoothDeviceDisconnectedFailure extends Failure {}
 class BluetoothNotFoundDeviceFailure extends Failure {}
 class BluetoothNotFoundDCharacteristicsFailure extends Failure {}
 class BluetoothScanDevicesFailure extends Failure {}
+class BluetoothDisconnectError extends Failure {}

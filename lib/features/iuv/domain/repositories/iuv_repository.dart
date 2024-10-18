@@ -7,4 +7,5 @@ abstract class IUVRepository {
   Stream<IUV> get dataStream;
   Future<Either<Failure, void>> initialRepository();
   Future<Either<Failure, void>> listenIUV();
+  Future<Either<Failure, void>> bluetoothOff();
 }

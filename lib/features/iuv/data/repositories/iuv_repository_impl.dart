@@ -39,11 +39,21 @@ class IUVRepositoryImpl implements IUVRepository {
       iuvBluetoothDatasource.dataStream.listen((value){
         _dataIUVStreamController.add(value);
       });
-      return Right(null);
+      return const Right(null);
     } on BluetoothDeviceDisconnectedFailure {
       return Left(BluetoothDeviceDisconnectedFailure());
     } on BluetoothNotFoundDCharacteristicsFailure {
       return Left(BluetoothNotFoundDCharacteristicsFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> bluetoothOff() async {
+    try {
+      await iuvBluetoothDatasource.disconnectWithDevice();
+      return const Right(null);
+    } on BluetoothDisconnectError {
+      return Left(BluetoothDisconnectError());
     }
   }
 
