@@ -24,6 +24,10 @@ class IUVBluetoothFailureState extends IUVBluetoothState{
   IUVBluetoothFailureState({required this.failure}): super(bluetoothState: false);
 }
 
+class IUVBluetoothLoading extends IUVBluetoothState {
+  IUVBluetoothLoading(): super(bluetoothState: false);
+}
+
 
 
 class IUVBluetoothCubit extends Cubit<IUVBluetoothState> {
@@ -34,6 +38,7 @@ class IUVBluetoothCubit extends Cubit<IUVBluetoothState> {
   IUVBluetoothCubit(this._listenIUVUseCase, this._bluetoothOffCase): super(IUVBluetoothOffState());
 
   Future<void> initListen() async {
+    emit(IUVBluetoothLoading());
     var resp = await _listenIUVUseCase();
     resp.fold(
       (f) {

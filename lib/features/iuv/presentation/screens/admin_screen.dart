@@ -51,6 +51,10 @@ class TextAdvice extends StatelessWidget {
     return BlocBuilder<IUVBluetoothCubit, IUVBluetoothState>(
       builder: (context, bstate) {
         switch(bstate){
+          case IUVBluetoothLoading():
+            return Text("Cargando...");
+          case IUVBluetoothReadState():
+            return Text("sí funciona: ${bstate.value}");
           case IUVBluetoothOffState():
             return Text("Error: Bluetooth está apagado");
           case IUVBluetoothFailureState():

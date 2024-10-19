@@ -23,7 +23,10 @@ class IUVRepositoryImpl implements IUVRepository {
   Future<Either<Failure, void>> initialRepository() async {
     try {
       await iuvBluetoothDatasource.searchDevice();
-      await iuvBluetoothDatasource.connectToDevice();
+      iuvBluetoothDatasource.dataStream.listen((value){
+        _dataIUVStreamController.add(value);
+      });
+      //await iuvBluetoothDatasource.connectToDevice();
       return const Right(null);
     } on BluetoothScanDevicesFailure {
       return Left(BluetoothScanDevicesFailure());
@@ -35,7 +38,7 @@ class IUVRepositoryImpl implements IUVRepository {
   @override
   Future<Either<Failure, void>> listenIUV() async {
     try {
-      await iuvBluetoothDatasource.listenDataDevice();
+      await iuvBluetoothDatasource.searchDevice();
       iuvBluetoothDatasource.dataStream.listen((value){
         _dataIUVStreamController.add(value);
       });

@@ -17,16 +17,7 @@ class ListenIUVUseCase {
 
   Future<Either<Failure, void>> call() async {
     var initialResp = await repository.initialRepository();
-    initialResp.fold(
-      (f){
-        return Left(f);
-      },
-      (v){
-        // ---
-      }
-    );
-    var resp = await repository.listenIUV();
-    return resp.fold(
+    return initialResp.fold(
       (f){
         return Left(f);
       },
@@ -37,5 +28,17 @@ class ListenIUVUseCase {
         return const Right(null);
       }
     );
+    /*var resp = await repository.listenIUV();
+    return resp.fold(
+      (f){
+        return Left(f);
+      },
+      (v){
+        repository.dataStream.listen((value){
+          _dataIUVStreamController.add(value);
+        });
+        return const Right(null);
+      }
+    );*/
   }
 }
