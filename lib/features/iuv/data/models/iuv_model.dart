@@ -8,4 +8,8 @@ class IUVModel extends IUV {
     return IUVModel(value: value, time: DateTime.now());
   }
 
+  factory IUVModel.fromFactory(IUV iuv){
+    return IUVModel(value: iuv.value, time: iuv.time);
+  }
+
 }

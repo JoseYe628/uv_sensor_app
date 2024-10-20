@@ -11,14 +11,18 @@ const uuidCharacteristic = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
 
 abstract class IUVBluetoothDatasource {
   Stream<IUVModel> get dataStream;
-  Future<void> searchDevice();
-  Future<void> disconnectWithDevice();
+  Stream<bool> get dataStatusStream;
+  Future<void> turnOn(); // Enciende el bluetooth, se conecta al device y prepara el dataStrem
+  Future<void> turnOff();
+  Future<void> listenBluetoothStatus();
 }
 
 class FlutterBlueDatasource implements IUVBluetoothDatasource {
 
   BluetoothDevice? _device;
-  final StreamController<IUVModel> _dataStreamController = StreamController<IUVModel>();
+  StreamSubscription<BluetoothConnectionState>? subscriptionStatusBluetooth;
+  StreamController<IUVModel> _dataStreamController = StreamController<IUVModel>();
+  StreamController<bool> _dataStatusStreamController = StreamController<bool>();
 
   FlutterBlueDatasource();
 
@@ -27,34 +31,46 @@ class FlutterBlueDatasource implements IUVBluetoothDatasource {
   Stream<IUVModel> get dataStream => _dataStreamController.stream;
 
   @override
-  Future<void> searchDevice() async {
+  Stream<bool> get dataStatusStream => _dataStatusStreamController.stream;
 
-    print("Empezando a escanear dispositivos");
-    FlutterBluePlus.startScan(
-      //withNames:["MyESP32"],
-      timeout: const Duration(seconds:15)
-    );
-
+  @override
+  Future<void> turnOn() async {
     var scanSubscription = FlutterBluePlus.onScanResults.listen((results){
       for(ScanResult result in results){
-        print("Device: ${result.device.advName}");
+        //print("Device: ${result.device.advName}");
         if(result.device.advName == "MyESP32"){
           FlutterBluePlus.stopScan();
           _connectWithDevice(result.device);
         }
       }
+    },
+    onError: (e){
+      throw BluetoothInternalErrorFailure();
+    });
 
-    }, 
-      onError: (e){throw BluetoothScanDevicesFailure();}
+    scanSubscription.onDone((){
+      print("El escaneo se ha terminao...");
+    });
+
+    //FlutterBluePlus.cancelWhenScanComplete(scanSubscription);
+
+    print("Empezando a escanear dispositivos");
+    FlutterBluePlus.startScan(
+      withNames:["MyESP32"],
+      timeout: const Duration(seconds:5)
     );
+    await Future.delayed(Duration(seconds: 6));
+    scanSubscription.cancel();
 
-    FlutterBluePlus.cancelWhenScanComplete(scanSubscription);
+    if(_device == null){
+      throw BluetoothNotFoundDeviceFailure();
+    }
+
   }
 
   Future<void> _connectWithDevice(BluetoothDevice device) async {
     await device.connect();
     _device = device;
-    print("El device está conectado");
     _discoverServices();
   }
 
@@ -71,21 +87,48 @@ class FlutterBlueDatasource implements IUVBluetoothDatasource {
                 String valueText = String.fromCharCodes(value);
                 var iuvModel = IUVModel.fromInt(int.parse(valueText));
                 _dataStreamController.add(iuvModel);
+              },
+              onDone: (){
+                print("Hubo una desconexión");
+                _dataStreamController.close();
+                _dataStreamController = StreamController<IUVModel>();
               });
             }
           }
         }
       }
+    } else {
+      throw BluetoothNotFoundDeviceFailure();
     }
   }
 
   @override
-  Future<void> disconnectWithDevice() async {
-    try {
-      await _device?.disconnect();
-    } catch(err){
-      throw BluetoothDisconnectError();
+  Future<void> turnOff() async {
+    await _device?.disconnect();
+    await subscriptionStatusBluetooth?.cancel();
+    subscriptionStatusBluetooth = null;
+    _dataStreamController.close();
+    _dataStreamController = StreamController<IUVModel>();
+    _dataStatusStreamController.close();
+    _dataStatusStreamController = StreamController<bool>();
+  }
+
+
+  @override
+  Future<void> listenBluetoothStatus() async {
+    if(_device != null){
+      subscriptionStatusBluetooth = _device!.connectionState.listen((status){
+        if(status == BluetoothConnectionState.disconnected){
+          _dataStatusStreamController.add(false);
+          turnOff();
+        }
+      },
+      onDone: (){
+        _dataStatusStreamController.close();
+        _dataStatusStreamController = StreamController<bool>();
+      });
     }
   }
+
 }
 

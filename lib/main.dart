@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:uv_sensor_app/core/routes/app_routes.dart';
 import 'package:uv_sensor_app/di.dart';
 import 'package:uv_sensor_app/features/iuv/presentation/bloc/iuv_bluetooth_cubit.dart';
+import 'package:uv_sensor_app/features/iuv/presentation/bloc/iuv_firebase_cubit.dart';
 import 'package:uv_sensor_app/utils/firebase_api.dart';
 import 'firebase_options.dart';
 
@@ -25,7 +26,8 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context){
     return MultiBlocProvider(
       providers: [
-        BlocProvider<IUVBluetoothCubit>(create: (BuildContext context) => GetIt.instance.get<IUVBluetoothCubit>())
+        BlocProvider<IUVBluetoothCubit>(create: (BuildContext context) => GetIt.instance.get<IUVBluetoothCubit>()),
+        BlocProvider<IUVFirebaseCubit>(create: (BuildContext context) => GetIt.instance.get<IUVFirebaseCubit>())
       ],
       child: const MyApp(),
     );

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uv_sensor_app/features/iuv/presentation/bloc/iuv_bluetooth_cubit.dart';
+import 'package:uv_sensor_app/features/iuv/presentation/bloc/iuv_bluetooth_state.dart';
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
@@ -18,7 +19,7 @@ class AdminScreen extends StatelessWidget {
           scrolledUnderElevation: 0,
           actions: [
             Switch(
-              value: bluetoothState.bluetoothState,
+              value: bluetoothState.bluetoothIsOn,
               onChanged: (val) async {
                 if(val){
                   await bluetoothCubit.initListen();
@@ -33,7 +34,7 @@ class AdminScreen extends StatelessWidget {
           margin: EdgeInsets.symmetric(horizontal: 40),
           child: Column(
             children: [
-              Text(bluetoothState.bluetoothState ? "Se conectó el device" : "No se conectó"),
+              SizedBox(height: 15),
               TextAdvice(),
             ],
           ),
@@ -51,17 +52,20 @@ class TextAdvice extends StatelessWidget {
     return BlocBuilder<IUVBluetoothCubit, IUVBluetoothState>(
       builder: (context, bstate) {
         switch(bstate){
-          case IUVBluetoothLoading():
-            return Text("Cargando...");
-          case IUVBluetoothReadState():
-            return Text("sí funciona: ${bstate.value}");
-          case IUVBluetoothOffState():
-            return Text("Error: Bluetooth está apagado");
-          case IUVBluetoothFailureState():
-            var text = (bstate as IUVBluetoothFailureState).failure.toString();
-            return Text("Error: ${text}");
+          case IUVBluetoothDisconnectedState():
+            return Text("Bluetooth no está conectado al device");
+          case IUVBluetoothLoadingState():
+            return Text("Intentando conectar al device...");
+          case IUVBluetoothReadingState():
+            return Text("Conectado exitosamente!. Valor recibido: ${bstate.iuv.value}", style: TextStyle(fontSize: 30),);
+          case IUVBluetoothConnectionErrorState():
+            var text = (bstate as IUVBluetoothConnectionErrorState).failure.toString();
+            return Text("Error al intentar conectar al device: ${text}");
+          case IUVBluetoothDisconnectionErrorState():
+            var text = (bstate as IUVBluetoothDisconnectionErrorState).failure.toString();
+            return Text("Error al intentar desconectar el device: ${text}");
           default:
-            return Text("Error no conocido");
+            return Text("Hubo un error no conocido");
         }
       }
     );

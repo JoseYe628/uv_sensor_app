@@ -4,60 +4,61 @@ import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:uv_sensor_app/core/error/failure.dart';
 import 'package:uv_sensor_app/features/iuv/data/datasources/iuv_bluetooth_datasource.dart';
+import 'package:uv_sensor_app/features/iuv/data/datasources/iuv_database_datasource.dart';
+import 'package:uv_sensor_app/features/iuv/data/models/iuv_model.dart';
 import 'package:uv_sensor_app/features/iuv/domain/entities/iuv.dart';
 import 'package:uv_sensor_app/features/iuv/domain/repositories/iuv_repository.dart';
 
 class IUVRepositoryImpl implements IUVRepository {
 
   final IUVBluetoothDatasource iuvBluetoothDatasource;
-  // TODO FirebaseDatasource
+  final IUVDatabaseDatasource iuvDatabaseDatasource;
 
-  final StreamController<IUV> _dataIUVStreamController = StreamController<IUV>();
-
-  IUVRepositoryImpl({required this.iuvBluetoothDatasource});
+  IUVRepositoryImpl({required this.iuvBluetoothDatasource, required this.iuvDatabaseDatasource});
 
   @override
-  Stream<IUV> get dataStream => _dataIUVStreamController.stream;
-
-  @override
-  Future<Either<Failure, void>> initialRepository() async {
+  Future<Either<Failure, Stream<IUV>>> localRepositoryOn() async {
     try {
-      await iuvBluetoothDatasource.searchDevice();
-      iuvBluetoothDatasource.dataStream.listen((value){
-        _dataIUVStreamController.add(value);
-      });
-      //await iuvBluetoothDatasource.connectToDevice();
-      return const Right(null);
-    } on BluetoothScanDevicesFailure {
-      return Left(BluetoothScanDevicesFailure());
+      await iuvBluetoothDatasource.turnOn();
+      return Right(iuvBluetoothDatasource.dataStream);
     } on BluetoothNotFoundDeviceFailure {
       return Left(BluetoothNotFoundDeviceFailure());
+    } on BluetoothInternalErrorFailure {
+      return Left(BluetoothInternalErrorFailure());
     }
   }
 
   @override
-  Future<Either<Failure, void>> listenIUV() async {
+  Future<Either<Failure, void>> localRepositoryOff() async {
     try {
-      await iuvBluetoothDatasource.searchDevice();
-      iuvBluetoothDatasource.dataStream.listen((value){
-        _dataIUVStreamController.add(value);
-      });
+      await iuvBluetoothDatasource.turnOff();
       return const Right(null);
-    } on BluetoothDeviceDisconnectedFailure {
-      return Left(BluetoothDeviceDisconnectedFailure());
-    } on BluetoothNotFoundDCharacteristicsFailure {
-      return Left(BluetoothNotFoundDCharacteristicsFailure());
+    } catch (error) {
+      return Left(BluetoothInternalErrorFailure());
     }
   }
 
   @override
-  Future<Either<Failure, void>> bluetoothOff() async {
+  Future<Either<Failure, Stream<bool>>> localRepositoryListen() async {
+    await iuvBluetoothDatasource.listenBluetoothStatus();
+    return Right(iuvBluetoothDatasource.dataStatusStream);
+  }
+
+  @override
+  Future<Either<Failure, void>> sendIUV(IUV iuv) async {
     try {
-      await iuvBluetoothDatasource.disconnectWithDevice();
+      var iuvModel = IUVModel.fromFactory(iuv);
+      await iuvDatabaseDatasource.send(iuvModel);
       return const Right(null);
-    } on BluetoothDisconnectError {
-      return Left(BluetoothDisconnectError());
+    } on FirebaseSendFailure {
+      return Left(FirebaseFailure());
     }
+  }
+
+  @override
+  Future<Either<Failure, Stream<List<IUV>>>> remoteRepositoryListen() async {
+    await iuvDatabaseDatasource.listen();
+    return Right(iuvDatabaseDatasource.dataStream);
   }
 
 }
