@@ -6,7 +6,6 @@ import 'package:uv_sensor_app/core/routes/app_routes.dart';
 import 'package:uv_sensor_app/di.dart';
 import 'package:uv_sensor_app/features/iuv/presentation/bloc/iuv_bluetooth_cubit.dart';
 import 'package:uv_sensor_app/features/iuv/presentation/bloc/iuv_firebase_cubit.dart';
-import 'package:uv_sensor_app/utils/firebase_api.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -14,7 +13,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseApi().initNotifications();
+  //await FirebaseApi().initNotifications();
   await dependenceInjection();
   runApp(const MainApp());
 }
@@ -27,7 +26,7 @@ class MainApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<IUVBluetoothCubit>(create: (BuildContext context) => GetIt.instance.get<IUVBluetoothCubit>()),
-        BlocProvider<IUVFirebaseCubit>(create: (BuildContext context) => GetIt.instance.get<IUVFirebaseCubit>())
+        BlocProvider<IUVFirebaseCubit>(create: (BuildContext context) => GetIt.instance.get<IUVFirebaseCubit>()..initListen())
       ],
       child: const MyApp(),
     );

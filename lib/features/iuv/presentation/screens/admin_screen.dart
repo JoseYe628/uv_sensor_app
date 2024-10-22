@@ -18,15 +18,26 @@ class AdminScreen extends StatelessWidget {
           backgroundColor: Colors.white,
           scrolledUnderElevation: 0,
           actions: [
-            Switch(
-              value: bluetoothState.bluetoothIsOn,
-              onChanged: (val) async {
-                if(val){
-                  await bluetoothCubit.initListen();
-                } else {
-                  await bluetoothCubit.bluetoothOff();
-                }
-              },
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 10),
+              child: SizedBox(
+                width: 45,
+                height: 30,
+                child: FittedBox(
+                  fit: BoxFit.fill,
+                  child: Switch(
+                    activeColor: Colors.green,
+                    value: bluetoothState.bluetoothIsOn,
+                    onChanged: (val) async {
+                      if(val){
+                        await bluetoothCubit.initListen();
+                      } else {
+                        await bluetoothCubit.bluetoothOff();
+                      }
+                    },
+                  ),
+                ),
+              ),
             ),
           ],
         ),

@@ -12,7 +12,7 @@ abstract class IUVDatabaseDatasource {
 }
 
 class IUVFirebaseDatasource implements IUVDatabaseDatasource {
-  DatabaseReference ref = FirebaseDatabase.instance.ref("records");
+  DatabaseReference ref = FirebaseDatabase.instance.ref('records');
 
   StreamController<List<IUVModel>> _dataStreamController = StreamController<List<IUVModel>>();
 
@@ -37,10 +37,13 @@ class IUVFirebaseDatasource implements IUVDatabaseDatasource {
     DateTime nowDateTime = DateTime.now();
     int todayAtMidnight = DateTime(nowDateTime.year, nowDateTime.month, nowDateTime.day).millisecondsSinceEpoch;
     ref.limitToLast(10).orderByChild("timestamp").startAt(todayAtMidnight).onValue.listen((DatabaseEvent event){
+      print(event.snapshot.value);
       if(event.snapshot.value == null){
         // No hay elementos
         _dataStreamController.add([]);
+        return;
       }
+      print(event.snapshot.value);
       var val = event.snapshot.value as Map<dynamic, dynamic>;
       List<IUVModel> records = [];
       val.forEach((key, value) {

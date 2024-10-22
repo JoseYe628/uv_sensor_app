@@ -1,7 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uv_sensor_app/bloc/uv_records_cubit.dart';
+import 'package:uv_sensor_app/features/iuv/presentation/bloc/iuv_firebase_cubit.dart';
+import 'package:uv_sensor_app/features/iuv/presentation/bloc/iuv_firebase_state.dart';
 
 class UVHistory extends StatelessWidget {
   UVHistory({super.key});
@@ -30,18 +31,21 @@ class _Records extends StatelessWidget {
   Widget build(BuildContext context){
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: BlocBuilder<UVRecordsCubit, UVRecordsState>(
-        builder: (BuildContext context, UVRecordsState state) { 
-          if(state.records.isEmpty){
-            return state.recordsNotFound
-              ? Text("No hay datos para mostrar hoy")
-              : Text("Cargando información...");
-          } else {
-            return Row(
-              children: state.records.reversed.map((uvRecord){
-                return _HistoryRecord(time: "${uvRecord.time.hour}:${uvRecord.time.minute}", uvVal: uvRecord.iuv);
-              }).toList(),
-            );
+      child: BlocBuilder<IUVFirebaseCubit, IUVFirebaseState>(
+        builder: (BuildContext context, IUVFirebaseState state) { 
+          switch(state){
+            case IUVFirebaseInitialState():
+              return Text("...");
+            case IUVFirebaseErrorState():
+              return Text("No hay datos en el historial");
+            case IUVFirebaseReadDataState():
+              return Row(
+                children: state.records.reversed.map((uvRecord){
+                  return _HistoryRecord(time: "${uvRecord.time.hour}:${uvRecord.time.minute}", uvVal: uvRecord.value);
+                }).toList(),
+              );
+            default:
+              return Text("Error inesperado...");
           }
         }
       ),

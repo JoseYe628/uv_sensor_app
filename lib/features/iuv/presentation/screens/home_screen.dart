@@ -1,5 +1,9 @@
 
 import 'package:flutter/material.dart';
+import 'package:uv_sensor_app/features/iuv/presentation/widgets/grid_menu_info.dart';
+import 'package:uv_sensor_app/features/iuv/presentation/widgets/uv_history.dart';
+import 'package:uv_sensor_app/features/iuv/presentation/widgets/uv_message_box.dart';
+import 'package:uv_sensor_app/features/iuv/presentation/widgets/uv_tracker.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -13,6 +17,10 @@ class HomeScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
+        /*leading: IconButton(
+          icon: Icon(Icons.menu, color: Colors.green,),
+          onPressed: (){},
+        )*/
       ),
       body: _UVElements(),
     );
@@ -37,10 +45,10 @@ class _UVElementsState extends State<_UVElements> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            //UvTraker(),
-            //UVMessageBox(),
-            //UVHistory(),
-            //GridMenuInfo(),
+            UvTraker(),
+            UVMessageBox(),
+            UVHistory(),
+            GridMenuInfo(),
           ],
         ),
       );

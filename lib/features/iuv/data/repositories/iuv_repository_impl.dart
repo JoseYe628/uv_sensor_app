@@ -47,8 +47,8 @@ class IUVRepositoryImpl implements IUVRepository {
   @override
   Future<Either<Failure, void>> sendIUV(IUV iuv) async {
     try {
-      var iuvModel = IUVModel.fromFactory(iuv);
-      await iuvDatabaseDatasource.send(iuvModel);
+      // var iuvModel = IUVModel.fromFactory(iuv);
+      // await iuvDatabaseDatasource.send(iuvModel);
       return const Right(null);
     } on FirebaseSendFailure {
       return Left(FirebaseFailure());
