@@ -49,6 +49,7 @@ class IUVRepositoryImpl implements IUVRepository {
     try {
       // var iuvModel = IUVModel.fromFactory(iuv);
       // await iuvDatabaseDatasource.send(iuvModel);
+      print("Valor de IUV recibido: ${iuv.value}");
       return const Right(null);
     } on FirebaseSendFailure {
       return Left(FirebaseFailure());

@@ -13,14 +13,7 @@ class LocalIUVUsecase {
 
   Future<Either<Failure, Stream<IUV>>> localRepositoryOn() async {
     var repoUV = await repository.localRepositoryOn();
-    return repoUV.fold(
-      (fail){
-        return Left(fail);
-      },
-      (stream){
-        return Right(stream);
-      }
-    );
+    return repoUV;
   }
 
   Future<Either<Failure, void>> localRepositoryOff() async {
@@ -37,14 +30,7 @@ class LocalIUVUsecase {
 
   Future<Either<Failure, Stream<bool>>> listenRepositoryState() async {
     var repoStatus = await repository.localRepositoryListen();
-    return repoStatus.fold(
-      (f){
-        return Left(f);
-      },
-      (stream){
-        return Right(stream);
-      }
-    );
+    return repoStatus;
   }
 
 }

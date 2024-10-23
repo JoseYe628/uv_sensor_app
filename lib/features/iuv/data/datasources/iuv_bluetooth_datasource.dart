@@ -107,9 +107,9 @@ class FlutterBlueDatasource implements IUVBluetoothDatasource {
     await _device?.disconnect();
     await subscriptionStatusBluetooth?.cancel();
     subscriptionStatusBluetooth = null;
-    _dataStreamController.close();
+    await _dataStreamController.close();
     _dataStreamController = StreamController<IUVModel>();
-    _dataStatusStreamController.close();
+    await _dataStatusStreamController.close();
     _dataStatusStreamController = StreamController<bool>();
   }
 
@@ -117,14 +117,14 @@ class FlutterBlueDatasource implements IUVBluetoothDatasource {
   @override
   Future<void> listenBluetoothStatus() async {
     if(_device != null){
-      subscriptionStatusBluetooth = _device!.connectionState.listen((status){
+      subscriptionStatusBluetooth = _device!.connectionState.listen((status) async {
         if(status == BluetoothConnectionState.disconnected){
           _dataStatusStreamController.add(false);
-          turnOff();
+          await turnOff();
         }
       },
-      onDone: (){
-        _dataStatusStreamController.close();
+      onDone: () async {
+        await _dataStatusStreamController.close();
         _dataStatusStreamController = StreamController<bool>();
       });
     }
