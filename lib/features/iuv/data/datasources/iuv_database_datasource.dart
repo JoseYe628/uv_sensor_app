@@ -6,18 +6,13 @@ import 'package:uv_sensor_app/core/error/failure.dart';
 import 'package:uv_sensor_app/features/iuv/data/models/iuv_model.dart';
 
 abstract class IUVDatabaseDatasource {
-  Stream<List<IUVModel>> get dataStream;
+  Future<Stream<List<IUVModel>>> getStreamData();
   Future<void> send(IUVModel iuv);
-  Future<void> listen();
 }
 
 class IUVFirebaseDatasource implements IUVDatabaseDatasource {
+
   DatabaseReference ref = FirebaseDatabase.instance.ref('records');
-
-  StreamController<List<IUVModel>> _dataStreamController = StreamController<List<IUVModel>>();
-
-  @override
-  Stream<List<IUVModel>> get dataStream => _dataStreamController.stream;
 
   @override
   Future<void> send(IUVModel iuv) async {
@@ -33,17 +28,10 @@ class IUVFirebaseDatasource implements IUVDatabaseDatasource {
 
 
   @override
-  Future<void> listen() async {
+  Future<Stream<List<IUVModel>>> getStreamData() async {
     DateTime nowDateTime = DateTime.now();
     int todayAtMidnight = DateTime(nowDateTime.year, nowDateTime.month, nowDateTime.day).millisecondsSinceEpoch;
-    ref.limitToLast(10).orderByChild("timestamp").startAt(todayAtMidnight).onValue.listen((DatabaseEvent event){
-      print(event.snapshot.value);
-      if(event.snapshot.value == null){
-        // No hay elementos
-        _dataStreamController.add([]);
-        return;
-      }
-      print(event.snapshot.value);
+    var stream = ref.limitToLast(10).orderByChild("timestamp").startAt(todayAtMidnight).onValue.map((DatabaseEvent event){
       var val = event.snapshot.value as Map<dynamic, dynamic>;
       List<IUVModel> records = [];
       val.forEach((key, value) {
@@ -56,12 +44,9 @@ class IUVFirebaseDatasource implements IUVDatabaseDatasource {
         records.add(uvModelData);
       });
       records.sort((a,b) => a.time.compareTo(b.time));
-      _dataStreamController.add(records);
-    },
-    onDone: () async {
-      await _dataStreamController.close();
-      _dataStreamController = StreamController<List<IUVModel>>();
+      return records;
     });
+    return stream;
   }
 
 }

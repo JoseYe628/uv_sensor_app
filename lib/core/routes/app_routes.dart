@@ -6,7 +6,7 @@ import 'package:uv_sensor_app/features/iuv/presentation/screens/home_screen.dart
 
 class AppRoutes {
 
-  static const initialRoute = 'admin';
+  static const initialRoute = 'home';
 
   static final routeItems = [
     // Aquí los screens

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,10 @@ Future<void> main() async {
   );
   await FirebaseMessaging.instance.subscribeToTopic("uv");
   //await FirebaseApi().initNotifications();
+  await FirebaseAuth.instance.signInWithEmailAndPassword(
+    email: "joseyanez2298@gmail.com",
+    password: "1962pk19*/",
+  );
   await dependenceInjection();
   runApp(const MainApp());
 }
@@ -28,7 +33,7 @@ class MainApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<IUVBluetoothCubit>(create: (BuildContext context) => GetIt.instance.get<IUVBluetoothCubit>()),
-        BlocProvider<IUVFirebaseCubit>(create: (BuildContext context) => GetIt.instance.get<IUVFirebaseCubit>()..initListen())
+        BlocProvider<IUVFirebaseCubit>(create: (BuildContext context) => GetIt.instance.get<IUVFirebaseCubit>()..initCubit())
       ],
       child: const MyApp(),
     );

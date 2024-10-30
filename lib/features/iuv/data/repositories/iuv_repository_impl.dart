@@ -1,6 +1,4 @@
 
-import 'dart:async';
-
 import 'package:dartz/dartz.dart';
 import 'package:uv_sensor_app/core/error/failure.dart';
 import 'package:uv_sensor_app/features/iuv/data/datasources/iuv_bluetooth_datasource.dart';
@@ -19,10 +17,8 @@ class IUVRepositoryImpl implements IUVRepository {
   @override
   Future<Either<Failure, Stream<IUV>>> localRepositoryOn() async {
     try {
-      await iuvBluetoothDatasource.turnOn();
-      return Right(iuvBluetoothDatasource.dataStream);
-    } on BluetoothNotFoundDeviceFailure {
-      return Left(BluetoothNotFoundDeviceFailure());
+      var streamResp =  await iuvBluetoothDatasource.bluetoothOn();
+      return Right(streamResp);
     } on BluetoothInternalErrorFailure {
       return Left(BluetoothInternalErrorFailure());
     }
@@ -30,36 +26,23 @@ class IUVRepositoryImpl implements IUVRepository {
 
   @override
   Future<Either<Failure, void>> localRepositoryOff() async {
-    try {
-      await iuvBluetoothDatasource.turnOff();
-      return const Right(null);
-    } catch (error) {
-      return Left(BluetoothInternalErrorFailure());
-    }
+    await iuvBluetoothDatasource.bluetoothOf();
+    return const Right(null);
   }
 
   @override
-  Future<Either<Failure, Stream<bool>>> localRepositoryListen() async {
-    await iuvBluetoothDatasource.listenBluetoothStatus();
-    return Right(iuvBluetoothDatasource.dataStatusStream);
+  Future<Either<Failure, Stream<List<IUV>>>> remoteRepositoryOn() async {
+    var stream = await iuvDatabaseDatasource.getStreamData();
+    return Right(stream);
   }
 
   @override
-  Future<Either<Failure, void>> sendIUV(IUV iuv) async {
-    try {
-      // var iuvModel = IUVModel.fromFactory(iuv);
-      // await iuvDatabaseDatasource.send(iuvModel);
-      print("Valor de IUV recibido: ${iuv.value}");
+  Future<Either<Failure, void>> remoteSendData(IUV iuv) async {
+    try{
+      await iuvDatabaseDatasource.send(IUVModel.fromFactory(iuv));
       return const Right(null);
     } on FirebaseSendFailure {
-      return Left(FirebaseFailure());
+      return Left(FirebaseSendFailure());
     }
   }
-
-  @override
-  Future<Either<Failure, Stream<List<IUV>>>> remoteRepositoryListen() async {
-    await iuvDatabaseDatasource.listen();
-    return Right(iuvDatabaseDatasource.dataStream);
-  }
-
 }

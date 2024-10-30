@@ -9,11 +9,12 @@ class RemoteIUVUsecase {
 
   RemoteIUVUsecase({required this.repository});
 
-  Future<Either<Failure, void>> sendData(IUV iuv) {
-    return repository.sendIUV(iuv);
+  Future<Either<Failure, Stream<List<IUV>>>> getStreamRemoteData(){
+    return repository.remoteRepositoryOn();
   }
 
-  Future<Either<Failure, Stream<List<IUV>>>> listenData(){
-    return repository.remoteRepositoryListen();
+  Future<Either<Failure, void>> sendRemoteData(IUV iuv){
+    return repository.remoteSendData(iuv);
   }
 }
+

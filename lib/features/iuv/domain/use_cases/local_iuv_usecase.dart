@@ -11,26 +11,12 @@ class LocalIUVUsecase {
 
   LocalIUVUsecase({required this.repository});
 
-  Future<Either<Failure, Stream<IUV>>> localRepositoryOn() async {
-    var repoUV = await repository.localRepositoryOn();
-    return repoUV;
+  Future<Either<Failure, Stream<IUV>>> localIUVOn() {
+    return repository.localRepositoryOn();
   }
 
-  Future<Either<Failure, void>> localRepositoryOff() async {
-    var offStatus = await repository.localRepositoryOff();
-    return offStatus.fold(
-      (fail){
-        return Left(fail);
-      },
-      (v){
-        return const Right(null);
-      }
-    );
-  }
-
-  Future<Either<Failure, Stream<bool>>> listenRepositoryState() async {
-    var repoStatus = await repository.localRepositoryListen();
-    return repoStatus;
+  Future<Either<Failure, void>> localIUVOff() {
+    return repository.localRepositoryOff();
   }
 
 }

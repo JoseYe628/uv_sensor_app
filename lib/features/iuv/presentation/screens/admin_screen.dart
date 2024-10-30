@@ -3,13 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uv_sensor_app/features/iuv/presentation/bloc/iuv_bluetooth_cubit.dart';
 import 'package:uv_sensor_app/features/iuv/presentation/bloc/iuv_bluetooth_state.dart';
+import 'package:uv_sensor_app/features/iuv/presentation/widgets/admin/admin_history.dart';
+import 'package:uv_sensor_app/features/iuv/presentation/widgets/admin/admin_tracker.dart';
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
 
   @override
   Widget build(BuildContext context){
+
     var bluetoothCubit = context.read<IUVBluetoothCubit>();
+
     return BlocBuilder<IUVBluetoothCubit, IUVBluetoothState>(
       builder: (context, bluetoothState) => Scaffold(
         appBar: AppBar(
@@ -30,7 +34,7 @@ class AdminScreen extends StatelessWidget {
                     value: bluetoothState.bluetoothIsOn,
                     onChanged: (val) async {
                       if(val){
-                        await bluetoothCubit.initListen();
+                        await bluetoothCubit.bluetoothOn();
                       } else {
                         await bluetoothCubit.bluetoothOff();
                       }
@@ -42,11 +46,12 @@ class AdminScreen extends StatelessWidget {
           ],
         ),
         body: Container(
-          margin: EdgeInsets.symmetric(horizontal: 40),
+          margin: EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
-              SizedBox(height: 15),
+              SizedBox(height: 5),
               TextAdvice(),
+              AdminUVHistory(),
             ],
           ),
         )
@@ -63,22 +68,40 @@ class TextAdvice extends StatelessWidget {
     return BlocBuilder<IUVBluetoothCubit, IUVBluetoothState>(
       builder: (context, bstate) {
         switch(bstate){
-          case IUVBluetoothDisconnectedState():
-            return Text("Bluetooth no está conectado al device");
           case IUVBluetoothLoadingState():
-            return Text("Intentando conectar al device...");
+            return _AdviceBox(text: "Cargando...", color: Colors.purple,);
+          case IUVBluetoothInternalErrorState():
+            return _AdviceBox(text: "Hubo un error en el módulo de Bluetooth ${bstate.failure.toString()}", color: Colors.black,);
           case IUVBluetoothReadingState():
-            return Text("Conectado exitosamente!. Valor recibido: ${bstate.iuv.value}", style: TextStyle(fontSize: 30),);
-          case IUVBluetoothConnectionErrorState():
-            var text = (bstate as IUVBluetoothConnectionErrorState).failure.toString();
-            return Text("Error al intentar conectar al device: ${text}");
-          case IUVBluetoothDisconnectionErrorState():
-            var text = (bstate as IUVBluetoothDisconnectionErrorState).failure.toString();
-            return Text("Error al intentar desconectar el device: ${text}");
+            return AdminTraker(iuv: bstate.iuv);
+          case IUVBluetoothDisconnectedState():
+            return _AdviceBox(text: "El dispositivo no está conectado", color: Colors.red);
           default:
             return Text("Hubo un error no conocido");
         }
       }
+    );
+  }
+}
+
+class _AdviceBox extends StatelessWidget {
+  const _AdviceBox({super.key, required this.text, required this.color});
+
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context){
+    return Container(
+      alignment: Alignment.center,
+      padding: EdgeInsets.symmetric(vertical: 30),
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      decoration: BoxDecoration(
+        color: color.withAlpha(20),
+        border: Border.all(color: color, width: 3),
+        borderRadius: BorderRadius.all(Radius.circular(8))
+      ),
+      child: Text(text),
     );
   }
 }
