@@ -25,9 +25,10 @@ class IUVBluetoothCubit extends Cubit<IUVBluetoothState> {
         emit(IUVBluetoothInternalErrorState(failure: fail));
       },
       (stream){
+        emit(IUVBluetoothConnectionSuccessState());
         _subscriptionBluetooth = stream.listen((iuv) async {
           if(iuv.value > 1 && iuv.value < 20){
-            var resp = await _remoteIUVUsecase.sendRemoteData(iuv);
+            //var resp = await _remoteIUVUsecase.sendRemoteData(iuv);
             resp.fold(
               (f){
                 emit(IUVBluetoothFirebaseSendingFailureState(failure: f));

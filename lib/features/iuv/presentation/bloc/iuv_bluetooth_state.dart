@@ -20,6 +20,10 @@ class IUVBluetoothReadingState extends IUVBluetoothState {
   IUVBluetoothReadingState({required this.iuv}): super(bluetoothIsOn: true);
 }
 
+class IUVBluetoothConnectionSuccessState extends IUVBluetoothState {
+  IUVBluetoothConnectionSuccessState(): super(bluetoothIsOn: true);
+}
+
 class IUVBluetoothConnectionErrorState extends IUVBluetoothState {
   final Failure failure;
   IUVBluetoothConnectionErrorState({required this.failure}): super(bluetoothIsOn: false);

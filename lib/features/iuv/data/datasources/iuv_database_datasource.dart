@@ -32,8 +32,9 @@ class IUVFirebaseDatasource implements IUVDatabaseDatasource {
     DateTime nowDateTime = DateTime.now();
     int todayAtMidnight = DateTime(nowDateTime.year, nowDateTime.month, nowDateTime.day).millisecondsSinceEpoch;
     var stream = ref.limitToLast(10).orderByChild("timestamp").startAt(todayAtMidnight).onValue.map((DatabaseEvent event){
-      var val = event.snapshot.value as Map<dynamic, dynamic>;
       List<IUVModel> records = [];
+      if(event.snapshot.value == null) { return records; }
+      var val = event.snapshot.value as Map<dynamic, dynamic>;
       val.forEach((key, value) {
         var val = value as Map<dynamic, dynamic>;
         int timestamp = val['timestamp'];

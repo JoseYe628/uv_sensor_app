@@ -50,6 +50,7 @@ class AdminScreen extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(height: 5),
+              Text("Vista principal"),
               TextAdvice(),
               AdminUVHistory(),
             ],
@@ -70,6 +71,8 @@ class TextAdvice extends StatelessWidget {
         switch(bstate){
           case IUVBluetoothLoadingState():
             return _AdviceBox(text: "Cargando...", color: Colors.purple,);
+          case IUVBluetoothConnectionSuccessState():
+            return _AdviceBox(text: "Conexión establecida", color: Colors.greenAccent,);
           case IUVBluetoothInternalErrorState():
             return _AdviceBox(text: "Hubo un error en el módulo de Bluetooth ${bstate.failure.toString()}", color: Colors.black,);
           case IUVBluetoothReadingState():
