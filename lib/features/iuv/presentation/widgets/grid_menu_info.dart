@@ -15,9 +15,17 @@ class GridMenuInfo extends StatelessWidget {
         crossAxisSpacing: 10,
         physics: NeverScrollableScrollPhysics(),
         children: [
-          _ButtonItem(icon: Icons.pan_tool, description: "Conoce el tipo de tu piel"),
-          _ButtonItem(icon: Icons.history, description: "Revisa el historial"),
-          _ButtonItem(icon: Icons.security, description: "Aprende sobre cómo protegerte"),
+          _ButtonItem(
+            icon: Icons.pan_tool, 
+            description: "Conoce el tipo de tu piel",
+            onTap: (){},
+          ),
+          //_ButtonItem(icon: Icons.history, description: "Revisa el historial"),
+          _ButtonItem(
+            icon: Icons.security, 
+            description: "Aprende sobre cómo protegerte",
+            onTap: (){},
+          ),
         ],
       ),
     );
@@ -25,29 +33,33 @@ class GridMenuInfo extends StatelessWidget {
 }
 
 class _ButtonItem extends StatelessWidget {
-  const _ButtonItem({super.key, required this.description, required this.icon});
+  const _ButtonItem({super.key, required this.description, required this.icon, required this.onTap});
 
   final IconData icon;
   final String description;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context){
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        //border: Border.all(color: Colors.green, width: 2),
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        color: Colors.green.withAlpha(30),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(icon, color: Colors.green,),
-            SizedBox(height: 10,),
-            Text(description, style: TextStyle(fontSize: 12), textAlign: TextAlign.center)
-          ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          //border: Border.all(color: Colors.green, width: 2),
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          color: Colors.green.withAlpha(30),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(icon, color: Colors.green,),
+              SizedBox(height: 10,),
+              Text(description, style: TextStyle(fontSize: 12), textAlign: TextAlign.center)
+            ],
+          ),
         ),
       ),
     );

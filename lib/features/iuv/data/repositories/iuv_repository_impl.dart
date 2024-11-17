@@ -21,6 +21,8 @@ class IUVRepositoryImpl implements IUVRepository {
       return Right(streamResp);
     } on BluetoothInternalErrorFailure {
       return Left(BluetoothInternalErrorFailure());
+    } on BluetoothNotFoundDeviceFailure {
+      return Left(BluetoothNotFoundDeviceFailure());
     }
   }
 
@@ -37,9 +39,9 @@ class IUVRepositoryImpl implements IUVRepository {
   }
 
   @override
-  Future<Either<Failure, void>> remoteSendData(IUV iuv) async {
+  Future<Either<Failure, void>> remoteSendData(IUV iuv, bool notify) async {
     try{
-      await iuvDatabaseDatasource.send(IUVModel.fromFactory(iuv));
+      await iuvDatabaseDatasource.send(IUVModel.fromFactory(iuv), notify = notify);
       return const Right(null);
     } on FirebaseSendFailure {
       return Left(FirebaseSendFailure());

@@ -39,6 +39,12 @@ class _Records extends StatelessWidget {
             case IUVFirebaseErrorState():
               return Text("No hay datos en el historial");
             case IUVFirebaseReadDataState():
+              if(state.records.length == 0){
+                return Padding(
+                  padding: const EdgeInsets.all(6.0),
+                  child: Text("No hay datos el día de hoy", style: TextStyle(color: Colors.green)),
+                );
+              }
               return Row(
                 children: state.records.reversed.map((uvRecord){
                   return _HistoryRecord(time: "${uvRecord.time.hour}:${uvRecord.time.minute}", uvVal: uvRecord.value);

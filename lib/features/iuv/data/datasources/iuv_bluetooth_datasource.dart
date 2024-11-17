@@ -24,7 +24,7 @@ class FlutterBlueDatasource implements IUVBluetoothDatasource {
 
   StreamSubscription<BluetoothConnectionState>? subscriptionStatusBluetooth;
 
-  late Stream<IUVModel>? _dataStream;
+  Stream<IUVModel>? _dataStream;
   BluetoothDevice? _device;
 
   FlutterBlueDatasource();

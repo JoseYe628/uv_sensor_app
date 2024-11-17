@@ -1,5 +1,6 @@
 
 import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uv_sensor_app/features/iuv/domain/entities/iuv.dart';
 import 'package:uv_sensor_app/features/iuv/domain/use_cases/remote_iuv_usecases.dart';
 import 'package:uv_sensor_app/features/iuv/presentation/bloc/iuv_firebase_state.dart';
@@ -11,6 +12,10 @@ class IUVFirebaseCubit extends Cubit<IUVFirebaseState>{
   IUVFirebaseCubit(this._remoteIUVUsecase): super(IUVFirebaseInitialState()); 
 
   void initCubit() async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: "joseyanez2298@gmail.com",
+      password: "1962pk19*/",
+    );
     var result = await _remoteIUVUsecase.getStreamRemoteData();
     result.fold(
       (fail){

@@ -1,10 +1,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uv_sensor_app/core/error/failure.dart';
 import 'package:uv_sensor_app/features/iuv/presentation/bloc/iuv_bluetooth_cubit.dart';
 import 'package:uv_sensor_app/features/iuv/presentation/bloc/iuv_bluetooth_state.dart';
 import 'package:uv_sensor_app/features/iuv/presentation/widgets/admin/admin_history.dart';
 import 'package:uv_sensor_app/features/iuv/presentation/widgets/admin/admin_tracker.dart';
+import 'package:uv_sensor_app/features/iuv/presentation/widgets/grid_menu_info.dart';
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
@@ -50,9 +52,9 @@ class AdminScreen extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(height: 5),
-              Text("Vista principal"),
               TextAdvice(),
               AdminUVHistory(),
+              GridMenuInfo(),
             ],
           ),
         )
@@ -74,6 +76,9 @@ class TextAdvice extends StatelessWidget {
           case IUVBluetoothConnectionSuccessState():
             return _AdviceBox(text: "Conexión establecida", color: Colors.greenAccent,);
           case IUVBluetoothInternalErrorState():
+            if (bstate.failure is BluetoothNotFoundDeviceFailure) {
+              return _AdviceBox(text: "No se encontró el dispositivo", color: Colors.red,);
+            }
             return _AdviceBox(text: "Hubo un error en el módulo de Bluetooth ${bstate.failure.toString()}", color: Colors.black,);
           case IUVBluetoothReadingState():
             return AdminTraker(iuv: bstate.iuv);

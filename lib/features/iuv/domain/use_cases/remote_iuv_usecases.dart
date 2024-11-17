@@ -13,8 +13,8 @@ class RemoteIUVUsecase {
     return repository.remoteRepositoryOn();
   }
 
-  Future<Either<Failure, void>> sendRemoteData(IUV iuv){
-    return repository.remoteSendData(iuv);
+  Future<Either<Failure, void>> sendRemoteData(IUV iuv, bool notify){
+    return repository.remoteSendData(iuv, notify);
   }
 }
 

@@ -7,5 +7,5 @@ abstract class IUVRepository {
   Future<Either<Failure, Stream<IUV>>> localRepositoryOn();
   Future<Either<Failure, void>> localRepositoryOff();
   Future<Either<Failure, Stream<List<IUV>>>> remoteRepositoryOn();
-  Future<Either<Failure, void>> remoteSendData(IUV iuv);
+  Future<Either<Failure, void>> remoteSendData(IUV iuv, bool notify);
 }

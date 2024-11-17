@@ -17,10 +17,10 @@ Future<void> main() async {
   );
   await FirebaseMessaging.instance.subscribeToTopic("uv");
   //await FirebaseApi().initNotifications();
-  await FirebaseAuth.instance.signInWithEmailAndPassword(
-    email: "joseyanez2298@gmail.com",
-    password: "1962pk19*/",
-  );
+  //await FirebaseAuth.instance.signInWithEmailAndPassword(
+  //  email: "joseyanez2298@gmail.com",
+  //  password: "1962pk19*/",
+  //);
   await dependenceInjection();
   runApp(const MainApp());
 }

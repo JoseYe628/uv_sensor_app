@@ -7,7 +7,7 @@ import 'package:uv_sensor_app/features/iuv/data/models/iuv_model.dart';
 
 abstract class IUVDatabaseDatasource {
   Future<Stream<List<IUVModel>>> getStreamData();
-  Future<void> send(IUVModel iuv);
+  Future<void> send(IUVModel iuv, [bool notify]);
 }
 
 class IUVFirebaseDatasource implements IUVDatabaseDatasource {
@@ -15,11 +15,12 @@ class IUVFirebaseDatasource implements IUVDatabaseDatasource {
   DatabaseReference ref = FirebaseDatabase.instance.ref('records');
 
   @override
-  Future<void> send(IUVModel iuv) async {
+  Future<void> send(IUVModel iuv, [bool notify = false]) async {
     try {
       await ref.push().set({
         "valor": iuv.value,
         "timestamp": iuv.time.millisecondsSinceEpoch,
+        "notify": notify,
       });
     } catch (error){
       throw FirebaseSendFailure();
