@@ -9,7 +9,9 @@ class IUVRecordsAverage {
     : records = [];
 
   void push(IUV iuv){
-    records.removeAt(0);
+    if(records.isNotEmpty){
+      records.removeAt(0);
+    }
     records.add(iuv);
   }
 
