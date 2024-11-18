@@ -77,7 +77,7 @@ class TextAdvice extends StatelessWidget {
             return _AdviceBox(text: "Conexión establecida", color: Colors.greenAccent,);
           case IUVBluetoothInternalErrorState():
             if (bstate.failure is BluetoothNotFoundDeviceFailure) {
-              return _AdviceBox(text: "No se encontró el dispositivo", color: Colors.red,);
+              return _AdviceBox(text: "No se encontró el dispositivo", color: Colors.black,);
             }
             return _AdviceBox(text: "Hubo un error en el módulo de Bluetooth ${bstate.failure.toString()}", color: Colors.black,);
           case IUVBluetoothReadingState():
