@@ -8,8 +8,16 @@ import 'package:uv_sensor_app/features/iuv/presentation/widgets/admin/admin_hist
 import 'package:uv_sensor_app/features/iuv/presentation/widgets/admin/admin_tracker.dart';
 import 'package:uv_sensor_app/features/iuv/presentation/widgets/grid_menu_info.dart';
 
-class AdminScreen extends StatelessWidget {
+class AdminScreen extends StatefulWidget {
   const AdminScreen({super.key});
+
+  @override
+  State<AdminScreen> createState() => _AdminScreenState();
+}
+
+class _AdminScreenState extends State<AdminScreen> {
+
+  bool switchVisible = false;
 
   @override
   Widget build(BuildContext context){
@@ -19,12 +27,19 @@ class AdminScreen extends StatelessWidget {
     return BlocBuilder<IUVBluetoothCubit, IUVBluetoothState>(
       builder: (context, bluetoothState) => Scaffold(
         appBar: AppBar(
-          title: Text("UV App", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+          title: GestureDetector(
+            onLongPress: (){
+              setState(() {
+                switchVisible = !switchVisible;
+              });
+            },
+            child: Text("UV App", style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold))
+          ),
           centerTitle: true,
           backgroundColor: Colors.white,
           scrolledUnderElevation: 0,
           actions: [
-            Container(
+            switchVisible == true ? Container(
               margin: EdgeInsets.symmetric(horizontal: 10),
               child: SizedBox(
                 width: 45,
@@ -44,18 +59,20 @@ class AdminScreen extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
+            ) : Container(),
           ],
         ),
         body: Container(
           margin: EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
-            children: [
-              SizedBox(height: 5),
-              TextAdvice(),
-              AdminUVHistory(),
-              GridMenuInfo(),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: 5),
+                TextAdvice(),
+                AdminUVHistory(),
+                GridMenuInfo(),
+              ],
+            ),
           ),
         )
       ),

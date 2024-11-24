@@ -18,13 +18,17 @@ class GridMenuInfo extends StatelessWidget {
           _ButtonItem(
             icon: Icons.pan_tool, 
             description: "Conoce el tipo de tu piel",
-            onTap: (){},
+            onTap: (){
+              Navigator.pushNamed(context, "phototype");
+            },
           ),
           //_ButtonItem(icon: Icons.history, description: "Revisa el historial"),
           _ButtonItem(
             icon: Icons.security, 
             description: "Aprende sobre cómo protegerte",
-            onTap: (){},
+            onTap: (){
+              Navigator.pushNamed(context, "pmeasures");
+            },
           ),
         ],
       ),

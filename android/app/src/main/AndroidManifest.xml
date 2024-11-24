@@ -16,6 +16,9 @@
     <!-- legacy for Android 9 or lower -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:maxSdkVersion="28" />
 
+    <!-- Internet permission -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:label="uv_sensor_app"
         android:name="${applicationName}"
