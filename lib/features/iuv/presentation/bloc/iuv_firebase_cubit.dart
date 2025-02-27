@@ -11,11 +11,17 @@ class IUVFirebaseCubit extends Cubit<IUVFirebaseState>{
 
   IUVFirebaseCubit(this._remoteIUVUsecase): super(IUVFirebaseInitialState()); 
 
+
   void initCubit() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: "joseyanez2298@gmail.com",
-      password: "1962pk19*/",
-    );
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if(currentUser == null){
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: "joseyanez2298@gmail.com",
+        password: "1962pk19*/",
+      );
+    } else {
+      print("El email del usuario es: ${currentUser.email}");
+    }
     var result = await _remoteIUVUsecase.getStreamRemoteData();
     result.fold(
       (fail){

@@ -16,6 +16,11 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await FirebaseMessaging.instance.subscribeToTopic("uv");
+  /*FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print('Got a message whilst in the foreground!');
+    print(message.data);
+  });*/
+
   //await FirebaseApi().initNotifications();
   //await FirebaseAuth.instance.signInWithEmailAndPassword(
   //  email: "joseyanez2298@gmail.com",

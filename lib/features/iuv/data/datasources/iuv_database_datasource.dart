@@ -17,11 +17,18 @@ class IUVFirebaseDatasource implements IUVDatabaseDatasource {
   @override
   Future<void> send(IUVModel iuv, [bool notify = false]) async {
     try {
-      await ref.push().set({
-        "valor": iuv.value,
-        "timestamp": iuv.time.millisecondsSinceEpoch,
-        "notify": notify,
-      });
+      if (notify == true){
+        await ref.push().set({
+          "valor": iuv.value,
+          "timestamp": iuv.time.millisecondsSinceEpoch,
+          "notify": true,
+        });
+      } else {
+        await ref.push().set({
+          "valor": iuv.value,
+          "timestamp": iuv.time.millisecondsSinceEpoch,
+        });
+      }
     } catch (error){
       throw FirebaseSendFailure();
     }

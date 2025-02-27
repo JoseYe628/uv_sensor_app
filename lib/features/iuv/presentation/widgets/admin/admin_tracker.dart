@@ -41,7 +41,7 @@ class _UVIndex extends StatelessWidget {
         style: TextStyle(
           height: 1,
           //backgroundColor: Colors.red,
-          color: getColorForUVIndex(iuv),
+          color: Colors.black,
           fontSize: iuv >= 10 ? 140 : 180,
           fontWeight: FontWeight.bold,
         ),
